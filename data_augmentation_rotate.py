@@ -1,3 +1,5 @@
+import argparse
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from PIL import Image
@@ -10,7 +12,6 @@ from io import BytesIO
 import io
 import cv2
 import os
-import argparse
 
 def read_image(data):
     base64_image_data = data['imageData']
@@ -183,31 +184,62 @@ def save_to_labelme_json(filepath, image_base64, annotations, image_shape):
     with open(filepath, 'w') as json_file:
         json.dump(data, json_file, indent=2)
 
+def visualize_annotations(image, annotations):
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.imshow(image, cmap='gray')
+
+    for annot in annotations:
+        x_center = annot['x']
+        y_center = annot['y']
+        width = annot['width']
+        height = annot['height']
+
+        rect = patches.Rectangle((x_center - width / 2, y_center - height / 2),
+                                 width, height, linewidth=2, edgecolor='r', facecolor='none')
+        ax.add_patch(rect)
+
+        label_y_position = y_center - height / 2 - 10  # 텍스트를 위로 10 픽셀 올립니다.
+        plt.text(x_center, label_y_position, annot['label'], color='white', fontsize=12,
+                 ha='center', va='bottom', bbox=dict(facecolor='red', alpha=0.5))
+
+    # plt.axis('off')
+    plt.show()
+
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--input_dir', type=str, default='./Label/',
-                        help='Directory where the LabelMe JSON files are stored')
-    parser.add_argument('--output_image_dir', type=str, default='./output/images/',
-                        help='Directory where the augmented images will be stored')
-    parser.add_argument('--output_label_dir', type=str, default='./output/label/',
-                        help='Directory where the augmented labels will be stored')
+    parser = argparse.ArgumentParser(
+        description='Automate the rotation of images and annotations with customizable settings.')
+
+    parser.add_argument('--input_dir', type=str, required=False, default='./Labels/',
+                        help='Directory where the input JSON files are stored.')
+    parser.add_argument('--output_image_dir', type=str, required=False, default='./output/images/',
+                        help='Directory where the rotated images will be saved.')
+    parser.add_argument('--output_label_dir', type=str, required=False, default='./output/label/',
+                        help='Directory where the rotated labels will be saved.')
     parser.add_argument('--rotation_step', type=int, default=10,
-                        help='Degrees to step through for image rotation (0-360)')
+                        help='Degree increment for rotating images (default is 10 degrees).')
+    parser.add_argument('--image_format', type=str, default='PNG', choices=['PNG', 'JPEG'],
+                        help='Format to save the rotated images (PNG or JPEG).')
+
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
 
-    os.makedirs(args.output_image_dir, exist_ok=True)
-    os.makedirs(args.output_label_dir, exist_ok=True)
+    # Paths updated to use argparse inputs
+    directory = args.input_dir
+    output_image_dir = args.output_image_dir
+    output_label_dir = args.output_label_dir
 
-    filenames = [filename for filename in os.listdir(args.input_dir) if filename.endswith(".json")]
+    os.makedirs(output_image_dir, exist_ok=True)
+    os.makedirs(output_label_dir, exist_ok=True)
+
+    filenames = [filename for filename in os.listdir(directory) if filename.endswith(".json")]
     print(filenames)
 
     for json_data in filenames:
-        with open(os.path.join(args.input_dir, json_data), 'r', encoding='utf-8') as file:
+        with open(os.path.join(directory, json_data), 'r', encoding='utf-8') as file:
             data = json.load(file)
 
         im = np.array(read_image(data)).astype(np.float64) / 255
@@ -217,19 +249,21 @@ def main():
             cropped = crop_to_center(im, rotated)
             cropped_image = Image.fromarray((cropped * 255).astype(np.uint8))
 
-            image_filename = f'rotated_{angle}_' + json_data.split(".")[0] + '.png'
-            cropped_image_path = os.path.join(args.output_image_dir, image_filename)
-            cropped_image.save(cropped_image_path)
+            image_filename = f'rotated_{angle}_' + json_data.split(".")[0] + '.' + args.image_format.lower()
+            cropped_image_path = os.path.join(output_image_dir, image_filename)
+            cropped_image.save(cropped_image_path, format=args.image_format.upper())
 
             annotations = calculate_annotations(data)
-            rotated_annotations = [rotate_annotation((im.shape[1] / 2, im.shape[0] / 2), annot, angle) for annot in annotations]
+            rotated_annotations = [rotate_annotation((im.shape[1] / 2, im.shape[0] / 2), annot, angle) for annot in
+                                   annotations]
 
             image_base64 = image_to_base64(cropped)
             json_filename = f'rotated_{angle}_' + json_data.split(".")[0] + '.json'
-            json_file_path = os.path.join(args.output_label_dir, json_filename)
+            json_file_path = os.path.join(output_label_dir, json_filename)
             save_to_labelme_json(json_file_path, image_base64, rotated_annotations, cropped.shape)
+
+            # visualize_annotations(cropped, rotated_annotations)
 
 
 if __name__ == '__main__':
     main()
-
