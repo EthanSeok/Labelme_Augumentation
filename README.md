@@ -3,11 +3,11 @@
 <br>
 
 * [data_augmentation_flipped.py](data_augmentation_flipped.py): 상하좌우 반전 증강
-* [data_augmentation_rotate.py](data_augmentation_rotate.py): 회전 증강
+* [data_augmentation_rotate.py](data_augmentation_rotate.py): 회전 증강 ([자세한 내용](https://blog.roboflow.com/why-and-how-to-implement-random-rotate-data-augmentation/))
 * [visualize_boundingbox.py](visualize_boundingbox.py): JSON을 이용해서 바운딩박스 시각화
-* [convert_labelme2yolo.py](convert_labelme2yolo.py): Labelme JSON을 YOLO txt 변환 ([자세한 내용](https://github.com/rooneysh/Labelme2YOLO/blob/main/LICENSE) 참고)
+* [convert_labelme2yolo.py](convert_labelme2yolo.py): Labelme JSON을 YOLO txt 변환 ([자세한 내용](https://github.com/rooneysh/Labelme2YOLO/blob/main/LICENSE))
 
-
+<br>
 
 ## 사용법
 
@@ -77,10 +77,6 @@ python convert_labelme2yolo.py --json_dir /home/username/labelme_json_dir/ --val
 
 * **imageData에 base64로 인코딩된 이미지 자료가 있어야 함.**
 
-<br>
-
-## 회전 
-[https://blog.roboflow.com/why-and-how-to-implement-random-rotate-data-augmentation/](https://blog.roboflow.com/why-and-how-to-implement-random-rotate-data-augmentation/) 참고
 
 <br>
 
