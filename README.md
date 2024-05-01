@@ -1,4 +1,12 @@
-## Labelme_Augumentation
+**본 프로젝트는 Labelme 어노테이션 자료를 증강하고, YOLO 학습 포맷으로 변환하는 것을 목적으로 합니다.**
+
+<br>
+
+* [data_augmentation_flipped.py](data_augmentation_flipped.py): 상하좌우 반전 증강
+* [data_augmentation_rotate.py](data_augmentation_rotate.py): 회전 증강
+* [convert_labelme2yolo.py](convert_labelme2yolo.py): Labelme JSON을 YOLO txt 변환
+
+
 
 ## 사용법
 
@@ -15,6 +23,16 @@ python data_augmentation_flipped.py --input_folder "./path/to/input" --output_fo
 ```python
 python data_augmentation_rotate.py --input_dir "./path/to/input_directory" --output_image_dir "./path/to/output_images" --output_label_dir "./path/to/output_labels" --rotation_step 15
 ```
+
+<br>
+
+[convert_labelme2yolo.py](convert_labelme2yolo.py)
+
+```python
+python convert_labelme2yolo.py --json_dir /home/username/labelme_json_dir/ --val_size 0.2
+```
+
+[https://github.com/rooneysh/Labelme2YOLO](https://github.com/rooneysh/Labelme2YOLO) 참고함. @author: xiaosonh
 
 <br>
 
