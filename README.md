@@ -1,5 +1,23 @@
 ## Labelme_Augumentation
 
+## 사용법
+
+[data_augmentation_flipped.py](data_augmentation_flipped.py)
+
+```python
+python data_augmentation_flipped.py --input_folder "./path/to/input" --output_folder "./path/to/output" --flip_mode "horizontal"
+```
+
+<br>
+
+[data_augmentation_rotate.py](data_augmentation_rotate.py)
+
+```python
+python data_augmentation_rotate.py --input_dir "./path/to/input_directory" --output_image_dir "./path/to/output_images" --output_label_dir "./path/to/output_labels" --rotation_step 15
+```
+
+<br>
+
 ### YOLO 학습을 위한 어노테이션 자료의 데이터 증강
 
 * 바운딩 박스의 좌표를 정의하는 방법은 두가지가 있음.
