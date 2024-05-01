@@ -61,10 +61,10 @@ def visualize_annotations(image, annotations):
 
 def main():
     ## json 경로
-    directory = "./output/augmentation/label"
+    directory = "./output/label"
 
     ## Labelme JSON 파일명
-    json_data = 'rotated_350_w329.json'
+    json_data = 'rotated_40_w001.json'
 
     with open(os.path.join(directory, json_data), 'r', encoding='utf-8') as file:
         data = json.load(file)
