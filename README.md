@@ -4,6 +4,7 @@
 
 * [data_augmentation_flipped.py](data_augmentation_flipped.py): 상하좌우 반전 증강
 * [data_augmentation_rotate.py](data_augmentation_rotate.py): 회전 증강
+* [visualize_boundingbox.py](visualize_boundingbox.py): JSON을 이용해서 바운딩박스 시각화
 * [convert_labelme2yolo.py](convert_labelme2yolo.py): Labelme JSON을 YOLO txt 변환
 
 
